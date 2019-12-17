@@ -27,7 +27,6 @@ def pull_tokens(api_key, figma_id, use_rgba_color=False):
     tokens = {}
     if len(children):
         for child in children:
-            # token_name = camelize(child["name"])
             token_name = child["name"]
             name = token_name.lower()
             if name == "color" or name == "colors":
@@ -50,17 +49,6 @@ def pull_tokens(api_key, figma_id, use_rgba_color=False):
     	json.dump(tokens, outfile, indent = 4, ensure_ascii = False)
 
 
-# def camelize(token_name):
-#     to_return = token_name
-#     for match in re.finditer(r"^\w|[A-Z]|\b\w", token_name):
-#         matchstart = match.start()
-#         if matchstart == 0:
-#             to_return = to_return[0].lower() + to_return[1:]
-#         else:
-#             to_return = to_return[0:matchstart] + to_return[matchstart].upper() + to_return[matchstart + 1:]
-#     return re.sub(ILLEGAL_CHARACTERS, "", to_return)
-
-
 def setup_color_tokens(color_frame, use_rgba_color=False):
     colors = {}
     for color in color_frame["children"]:
@@ -70,7 +58,6 @@ def setup_color_tokens(color_frame, use_rgba_color=False):
         b = round_color_value(color_data["b"])
         a = round_color_value(color_data["a"], 1)
         color_string = f"rgba({r}, {g}, {b}, {a})" if use_rgba_color else f"#{int(r):02x}{int(g):02x}{int(b):02x}"
-        # name = camelize(color["name"])
         name = color["name"]
         colors[name] = color_string
     return colors
@@ -79,7 +66,6 @@ def setup_color_tokens(color_frame, use_rgba_color=False):
 def setup_spacing_tokens(spacing_frame):
     spacings = {}
     for spacing in spacing_frame["children"]:
-        # name = camelize(spacing["name"])
         name = spacing["name"]
         bb_width = spacing["absoluteBoundingBox"]["width"]
         spacings[name] = f'{str(int(bb_width))}px'
@@ -89,7 +75,6 @@ def setup_spacing_tokens(spacing_frame):
 def setup_font_tokens(frame):
     fonts = []
     for child in frame["children"]:
-        # layer_name = camelize(child["name"])
         layer_name = child["name"]
         font_components = child["style"]["fontPostScriptName"].split("-")
         font_name = child["style"]["fontFamily"]
